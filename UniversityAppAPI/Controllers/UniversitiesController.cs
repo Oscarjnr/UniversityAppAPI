@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using UniversityAppAPI.Data;
+using UniversityAppAPI.Models;
 
 namespace UniversityAppAPI.Controllers
 {
     [ApiController]
-    [Route("api/employees")]
+    [Route("api/universities")]
 
     public class UniversitiesController : Controller
     {
@@ -23,5 +24,15 @@ namespace UniversityAppAPI.Controllers
             var universities = await _applicationDbContext.Universities.ToListAsync();
             return Ok(universities);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> AddUniversity(University addUniversityRequest)
+        {
+            addUniversityRequest.Id = Guid.NewGuid();
+            await _applicationDbContext.Universities.AddAsync(addUniversityRequest);
+            await _applicationDbContext.SaveChangesAsync();
+            return Ok(addUniversityRequest);
+        }
+        
     }
 }
